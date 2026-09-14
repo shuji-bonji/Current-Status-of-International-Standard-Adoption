@@ -1,9 +1,10 @@
 # 通信・ICT・Web標準の総括：領域横断カタログと採用実態分析
 
 作成日: 2026年7月24日
+改訂: 2026年9月14日（RFC 9421 / Web Bot Auth を補完。エージェント決済本体は金融レポートへ）
 対象: インターネット基盤（IETF）、Web（W3C/WHATWG）、モバイル（3GPP/ITU）、近距離・LAN（IEEE 802）、文字コード・国際化（Unicode）、ID・認証・セキュリティ、名前・番号資源（ICANN）まで、通信・ICTのフルスタックを支える国際標準の全体像。
 目的: 軍事・医療・金融の総括レポートと同レベルで、前半に領域別カタログ（層構造）、後半に採用・相互運用の実態を分析する。**日本の関与を厚めに**扱い、横断コラム「標準化の地政学」のレンズ（EU規制／米市場／中国国家／日本は製品・要素）を適用する。
-凡例: 版・年号は2026年7月時点で確認した公開情報に基づく。断定を避ける箇所は〔要確認〕と付す。
+凡例: 版・年号は改訂時点で確認した公開情報に基づく。断定を避ける箇所は〔要確認〕と付す。
 
 ---
 
@@ -36,7 +37,7 @@
 | **ITU（-T/-R）** | 国連の条約機関（国家単位） | 電気通信の枠組み、IMT-2020/2030（5G/6Gの傘）、周波数（WRC） |
 | **IEEE 802** | 学会の作業部会 | LAN/MAN：Ethernet(802.3)、Wi-Fi(802.11)、802.1 |
 | **Unicode Consortium** | 会員制 | Unicode（ISO/IEC 10646＝UCSと同期） |
-| **FIDO Alliance / OpenID Foundation / OASIS** | 業界団体 | FIDO2/CTAP、OpenID Connect、SAML |
+| **FIDO Alliance / OpenID Foundation / OASIS** | 業界団体 | FIDO2/CTAP、OpenID Connect、SAML。FIDO は 2026-04 に AP2（エージェント決済の委任証明）も受領（金融レポート 3.7） |
 | **ICANN / IANA / RIR（日本はAPNIC/JPNIC）** | 資源管理 | ドメイン名・IPアドレス・プロトコル番号 |
 | **CA/Browser Forum** | 業界団体 | 公開PKIの証明書要件 |
 
@@ -76,6 +77,7 @@ flowchart TD
 | **TCP / UDP** | 基幹 | 信頼/非信頼トランスポート |
 | **QUIC** | RFC 9000 | UDP上の新トランスポート。TLS 1.3を統合し1RTTで接続確立 |
 | **HTTP** | HTTP/1.1・/2・/3 | **HTTP/3（RFC 9114）はQUIC上。2025年10月で世界採用 約35%（Cloudflare）、上位1000万サイトの3割超、主要ブラウザ95%超が対応** |
+| **HTTP Message Signatures** | **RFC 9421**（2024-02） | HTTP メッセージへの署名。エージェント／ボットの身元証明の土台。決済プロトコル（x402 等）が依拠する層。金融側のカタログは『金融標準の総括』3.7 |
 | **TLS** | 1.3（RFC 8446） | **上位サイトの約75%が1.3対応（2025年6月）、QUIC込みの「modern TLS」は約94%**。1.0/1.1は非推奨化 |
 | **DNS** | + DNSSEC / DoH / DoT | 名前解決。近年は暗号化（DoH RFC 8484）が普及 |
 | **BGP** | 経路制御 | AS間ルーティング。RPKIで経路認証を補強 |
@@ -136,11 +138,12 @@ Webは「W3C（勧告トラック）」と「WHATWG（ブラウザ連合のLivin
 | **OAuth 2.0**（RFC 6749）/ **2.1** | IETF | 認可の事実上標準。2.1は2.0＋運用ベストプラクティスの統合ドラフト |
 | **OpenID Connect** | OpenID Foundation | OAuth上の認証層。ソーシャルログインの基盤 |
 | **SAML** | OASIS | 旧世代のSSO。企業で根強く残存 |
-| **FIDO2 = WebAuthn＋CTAP** | W3C＋FIDO Alliance | パスワードレス。**パスキー（Passkeys）が2025年に主流化、調査で53%が1つ以上の口座で有効化** |
+| **FIDO2 = WebAuthn＋CTAP** | W3C＋FIDO Alliance | パスワードレス。**パスキー（Passkeys）が2025年に主流化、調査で53%が1つ以上の口座で有効化**。2026-04-28 には Google が **AP2**（エージェント決済の委任証明）を FIDO に寄贈。認証団体が支払い委任まで射程を広げた（本体は『金融標準の総括』3.7） |
+| **Web Bot Auth** | IETF（RFC 9421 のプロファイル） | 自動クライアントが HTTP リクエストに署名し、サーバが身元を検証する。2025-10 に WG 設置、ドラフト段階〔要確認〕。身元の規格であり、決済の規格ではない |
 | **X.509 / PKI / ACME** | IETF＋CA/Browser Forum | 公開鍵基盤・証明書。HTTPS常時化 |
 | **暗号アルゴリズム** | NIST等 | 近年はポスト量子暗号（PQC）標準化が進行〔要確認〕 |
 
-ID・認証は「金融・医療・行政」すべてに刺さる **横断レイヤー**（横断コラム参照）。パスキーの主流化は、この10年で最大の実装トレンドの一つ。
+ID・認証は「金融・医療・行政」すべてに刺さる **横断レイヤー**（横断コラム参照）。パスキーの主流化は、この10年で最大の実装トレンドの一つ。エージェントの身元（Web Bot Auth）とエージェントの支払い（x402 / AP2）は層が違い、前者は本レポート、後者は金融レポートに置く。
 
 ### 3.7 名前・番号資源（ICANN / IANA / RIR）
 
@@ -264,13 +267,13 @@ quadrantChart
     quadrant-3 強制力弱く・ギャップ小
     quadrant-4 強制力弱く・ギャップ大
     TCP-IP-DNS基盤: [0.90, 0.20]
-    HTTP-TLS(Web): [0.85, 0.25]
+    "HTTP-TLS(Web)": [0.85, 0.25]
     Unicode-UTF8: [0.88, 0.20]
-    モバイル(3GPP): [0.82, 0.35]
+    "モバイル(3GPP)": [0.82, 0.35]
     Wi-Fi-Ethernet: [0.80, 0.25]
-    ID認証(FIDO/OAuth): [0.55, 0.45]
+    "ID認証(FIDO/OAuth)": [0.55, 0.45]
     IPv6: [0.60, 0.70]
-    アクセシビリティ(WCAG): [0.55, 0.55]
+    "アクセシビリティ(WCAG)": [0.55, 0.55]
     WebAssembly: [0.40, 0.40]
 ```
 
@@ -296,9 +299,11 @@ quadrantChart
 - HTTP/3・QUIC・TLS: [HTTP/3（Wikipedia）](https://en.wikipedia.org/wiki/HTTP/3) ／ [HTTP/3 35% adoption（DEV）](https://dev.to/linou518/http3-is-at-35-adoption-you-cant-call-quic-a-future-technology-anymore-2ghm)
 - Wi-Fi 7/8: [IEEE 802.11be-2024（Wikipedia）](https://en.wikipedia.org/wiki/IEEE_802.11be-2024) ／ [Wi-Fi 8 / 802.11bn UHR（Samsung Research）](https://research.samsung.com/blog/IEEE-802-11bn-Ultra-High-Reliability-UHR-Wi-Fi-8)
 - FIDO/パスキー/WebAuthn: [FIDO Passkeys（FIDO Alliance）](https://fidoalliance.org/passkeys/) ／ [WebAuthn（Wikipedia）](https://en.wikipedia.org/wiki/WebAuthn)
+- RFC 9421 / Web Bot Auth: [RFC 9421: HTTP Message Signatures](https://www.rfc-editor.org/rfc/rfc9421) ／ [draft-ietf-webbotauth-httpsig-protocol](https://datatracker.ietf.org/doc/draft-ietf-webbotauth-httpsig-protocol/) ／ [Cloudflare Web Bot Auth](https://developers.cloudflare.com/bots/reference/bot-verification/web-bot-auth)
+- AP2（FIDO への寄贈）: 『金融標準の総括』3.7 ／ [Google donates AP2 to FIDO Alliance（2026-04-28）](https://blog.google/products-and-platforms/platforms/google-pay/agent-payments-protocol-fido-alliance/)
 - Unicode 17.0: [Unicode 17.0 Release（Unicode Blog, 2025-09-09）](https://blog.unicode.org/2025/09/unicode-170-release-announcement.html)
 - 絵文字（日本発）: [Shigetaka Kurita（Wikipedia）](https://en.wikipedia.org/wiki/Shigetaka_Kurita) ／ [Shigetaka Kurita, Emoji（MoMA）](https://www.moma.org/collection/works/196070) ／ [i-Mode と絵文字（Nippon.com）](https://www.nippon.com/en/japan-topics/g02591/ntt-docomo-ends-i-mode-mobile-service-that-pioneered-the-emoji.html)
 - 日本のインターネット基盤: [Jun Murai（Wikipedia）](https://en.wikipedia.org/wiki/Jun_Murai) ／ [WIDE Project（Wikipedia）](https://en.wikipedia.org/wiki/WIDE_Project) ／ [KAME project（Wikipedia）](https://en.wikipedia.org/wiki/KAME_project)
 - Ruby標準化: [ISO/IEC 30170:2012（ISO）](https://www.iso.org/standard/59579.html)
 
-> 注記: 版・年号は2026年7月時点の公開情報に基づく。IPv6普及率、i-mode終了時期、PQC標準化状況など変動・地域差のある項目は〔要確認〕を付した。周波数政策（ITU-R WRC）や各国電気通信規制の細目は本レポートの範囲外とし、必要に応じ別途深掘りする。
+> 注記: 版・年号は2026年9月改訂時点の公開情報に基づく。IPv6普及率、i-mode終了時期、PQC標準化状況、Web Bot Auth の RFC 化など変動・地域差のある項目は〔要確認〕を付した。周波数政策（ITU-R WRC）や各国電気通信規制の細目は本レポートの範囲外とし、必要に応じ別途深掘りする。エージェント決済（x402 / AP2）のカタログは金融レポートに置く。
